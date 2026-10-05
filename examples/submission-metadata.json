@@ -1,0 +1,17 @@
+{
+  "formatVersion": 1,
+  "projectId": "example-project",
+  "baseRevision": null,
+  "contributor": {
+    "name": "Example contributor",
+    "contact": "https://example.org/contact"
+  },
+  "rights": "I have permission to publish these files under their stated licenses and offer my original contributions under MIT.",
+  "testResults": [
+    {
+      "command": "node --test",
+      "result": "not-run",
+      "notes": "Synthetic example metadata. Replace with actual results."
+    }
+  ]
+}

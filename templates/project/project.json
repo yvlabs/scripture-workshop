@@ -1,0 +1,14 @@
+{
+  "id": "example-project",
+  "purpose": "Synthetic contribution-format demonstration; replace before submitting.",
+  "status": "prototype",
+  "directoryUrl": null,
+  "maintainer": {
+    "name": "Example contributor",
+    "contact": "https://example.org/contact"
+  },
+  "license": "MIT",
+  "maintenance": "Demonstration only; no support commitment.",
+  "testCommand": "node --test",
+  "buildCommand": "No build required."
+}
