@@ -1,5 +1,7 @@
 # Contributing
 
+Create/reuse the connected contributor's fork **before launching a repository-bound cloud agent**, then launch it on that fork. `yvlabs` is the upstream maintainer; read-only upstream access is normal. Never ask the operator to own `yvlabs`, grant it integration access or obtain collaborator permissions. Connect/select the contributor-owned fork when required. The contributing agent opens the upstream PR when its tools permit.
+
 ## Verify GitHub access before building
 
 Follow [GitHub setup and submission](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/github-contribution.md): verify the authorized identity, create/reuse its fork, verify branch push access and confirm PR creation is supported. Resolve missing access with the operator before substantial implementation. An authenticated VM can do this through Git/CLI without a special repository connector.
