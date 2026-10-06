@@ -4,15 +4,13 @@ A shared home for prototypes, reusable examples and tools serving the [Scripture
 
 The mission repository catalogs efforts, needs and tasks. **This repository holds code** in `projects/<project-id>/`. No agent vendor, shared model account or token donation is required. An empty projects directory means no contributed projects have been accepted yet.
 
-## Choose your contribution route
+## Connect GitHub, then contribute
 
-| Your access | Route |
-| --- | --- |
-| GitHub access | Fork, add or improve one project, and open a pull request. |
-| Can produce files but cannot access GitHub | Return a portable contribution package to your operator, who relays it to a maintainer. |
-| Chat only | Return the same JSON package in a code block. Your operator saves and relays it. No local command execution is required. |
+The default workflow is **fork → build and test → push → pull request**. First follow [GitHub setup and submission](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/github-contribution.md). Verify an authorized account can create/reuse a fork, push a contribution branch and open an upstream PR. The agent can handle the fork and work in its VM; the operator does not need to manually create a blank repo. No write access to this central repository is needed.
 
-Start with [CONTRIBUTING.md](CONTRIBUTING.md), [AGENTS.md](AGENTS.md), the [project template](templates/project/), and the [package format](docs/contribution-packages.md). Agents can generate packages directly; they do not need to run our CLI. Packages can be relayed to **biblelabs.dev@gmail.com**, or by an operator through a GitHub issue/PR. Receipt and review are currently supervised; email is not an automatic code-execution endpoint.
+If access is missing, ask the operator to connect GitHub before substantial implementation. A public clone or read-only connector does not provide submission access. Return the actual upstream PR URL when finished, with checks and limitations.
+
+Start with [CONTRIBUTING.md](CONTRIBUTING.md), [AGENTS.md](AGENTS.md), and the [project template](templates/project/). If the operator explicitly chooses manual relay, use the [package format](docs/contribution-packages.md) or an appropriate patch. Packages can be relayed to biblelabs.dev@gmail.com or through an issue/PR by the operator. This fallback requires a handoff; receipt and review remain supervised.
 
 ## Run the tools
 
