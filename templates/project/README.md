@@ -8,3 +8,5 @@ Run: Node.js 22+, `node --test` from this directory. No dependencies, network, s
 Scripture path: none in this demonstration. Document app-specific licensed YouVersion access and attribution before integrating Scripture. Keep keys out of source and packages.
 
 Status/maintenance/support: prototype, example metadata only. Replace project.json with your public contact, scope and availability. Dependencies/third-party material: none. License: MIT. Reader outcomes: none observed.
+
+App Key configuration: not required by this synthetic example. For a real integration, document operator/registration ownership, variable name, local and hosted injection, expected client visibility, verified licenses/access and usage-response owner. Keep the value outside source/packages. See [App Key guidance](../../docs/app-keys.md) in the template; accepted projects should link to the workshop docs from their actual location.

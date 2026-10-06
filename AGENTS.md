@@ -10,3 +10,5 @@ Read README.md, CONTRIBUTING.md and docs/review.md. Find mission tasks and evide
 - Preserve contributor credit; label relayed work. No impersonated identity or fabricated co-author email. A package hash proves content consistency, not identity or rights.
 - Root tooling/governance changes require a separate PR. Code contributions require maintainer inspection and scoped testing; directory auto-approval commands do not apply here.
 - Before contributing run `npm test` and `npm run validate` when possible, plus the project's documented checks. Otherwise report exactly what remains unrun.
+
+App registration and key setup: follow docs/app-keys.md and the linked official signup guide. Actual keys are controlled configuration, never source/package contents. Document expected client visibility; build injection does not make client-distributed keys confidential. No shared workshop key or cross-app reuse.

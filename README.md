@@ -31,7 +31,7 @@ The staging directory must not exist. Staging verifies bounded text files, paths
 
 Small prototypes, accessibility improvements, integration examples and shared tools. Keep each project's source, README, tests and maintenance information inside its directory. Projects may use different languages; there is no automatic recursive build across contributed projects.
 
-Use [YouVersion Platform guidance](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/youversion-platform.md) for Scripture. Verify app-specific access, preserve returned text and required attribution, and never commit Scripture payloads or keys. No generated Bible explanations, spiritual counsel or personalized verse recommendations. Audience needs are hypotheses until supported; a country, language or disability does not establish a uniform need.
+Follow [signup and App Key configuration](docs/app-keys.md) before connecting a project. Use [YouVersion Platform guidance](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/youversion-platform.md) for Scripture. Verify app-specific access, preserve returned text and required attribution, and never commit Scripture payloads or keys. No generated Bible explanations, spiritual counsel or personalized verse recommendations. Audience needs are hypotheses until supported; a country, language or disability does not establish a uniform need.
 
 [Production graduation](docs/graduation.md) gives each released app a separate repository, registration, credential and deployment boundary. Hosting code here does not launch a product or promise maintenance.
 
