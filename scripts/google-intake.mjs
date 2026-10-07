@@ -11,6 +11,8 @@ export const MAX_ENVELOPE = 4 * 1024 * 1024;
 const MAX_PATCH = 2 * 1024 * 1024, MAX_FILE = 65536, MAX_FILES = 200;
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 const SHA = /^[a-f0-9]{40}$/;
+const POSSIBLE_CREDENTIAL = /-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----|\bgh[pousr]_[A-Za-z0-9]{20,}|\bgithub_pat_[A-Za-z0-9_]{20,}/;
+const PRIVATE_KEY_DELIMITER = /^\s*-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----\s*$/;
 export class SubmissionError extends Error {
   constructor(code, message) { super(message); this.name = 'SubmissionError'; this.code = code; }
 }
@@ -78,11 +80,58 @@ async function git(repo, args, {input, index} = {}) {
     child.stdin.on('error', () => {}); child.stdin.end(input);
   });
 }
+// A credential test literal is not newly submitted if its complete source line
+// remains unchanged at the same path in both the base and pinned trusted main.
+// Compare canonical Git hunks, not contributor-provided added-line claims.
+async function unchangedCredentialLines(repo, revision, index, file, lines, flagged) {
+  const entry = (await git(repo, ['ls-tree','-z',revision,'--',file])).toString('utf8');
+  const match = /^(100644|100755) blob ([a-f0-9]{40})\t([^\0]+)\0$/.exec(entry);
+  if (!match || match[3] !== file) return false;
+  const size = Number((await git(repo, ['cat-file','-s',match[2]])).toString().trim());
+  if (!Number.isSafeInteger(size) || size < 0 || size > MAX_FILE) return false;
+  const before = await git(repo, ['cat-file','blob',match[2]]);
+  let original;
+  try { original = new TextDecoder('utf-8', {fatal:true}).decode(before).split('\n'); } catch { return false; }
+  if (before.includes(0)) return false;
+  const diff = (await git(repo, ['diff','--cached','--no-ext-diff','--no-textconv','--no-renames','--text','--unified=0','--diff-algorithm=histogram','--no-indent-heuristic',revision,'--',file], {index})).toString('utf8');
+  const hunks = [];
+  for (const line of diff.split('\n')) {
+    const hunk = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/.exec(line);
+    if (!hunk) continue;
+    const oldCount = Number(hunk[2] ?? 1), newCount = Number(hunk[4] ?? 1);
+    hunks.push({oldStart:Number(hunk[1]) - (oldCount ? 1 : 0), oldCount, newStart:Number(hunk[3]) - (newCount ? 1 : 0), newCount});
+  }
+  for (const candidate of flagged) {
+    let oldCursor = 0, newCursor = 0, altered = false;
+    for (const hunk of hunks) {
+      if (candidate < hunk.newStart) break;
+      if (candidate < hunk.newStart + hunk.newCount) { altered = true; break; }
+      oldCursor = hunk.oldStart + hunk.oldCount; newCursor = hunk.newStart + hunk.newCount;
+    }
+    if (altered || original[oldCursor + candidate - newCursor] !== lines[candidate]) return false;
+  }
+  return true;
+}
+async function checkCredentials(repo, revisions, index, file, content) {
+  const lines = content.toString('utf8').split('\n'), flagged = [];
+  for (let i = 0; i < lines.length; i++) if (POSSIBLE_CREDENTIAL.test(lines[i])) flagged.push(i);
+  if (!flagged.length) return;
+  // An unchanged standalone BEGIN header could acquire newly submitted key
+  // material underneath it. Keep those headers blocked even in trusted files.
+  const safe = !flagged.some(i => PRIVATE_KEY_DELIMITER.test(lines[i]));
+  check(safe, 'possible-credential','Remove possible private keys or access tokens before submitting.');
+  for (const revision of new Set(revisions)) {
+    check(await unchangedCredentialLines(repo, revision, index, file, lines, flagged), 'possible-credential','Remove possible private keys or access tokens before submitting.');
+  }
+}
 export async function preparePatch(repo, envelope) {
   validateEnvelope(envelope);
+  let trustedHead;
   try {
+    trustedHead = (await git(repo, ['rev-parse','HEAD'])).toString().trim();
+    check(SHA.test(trustedHead), 'invalid-base', 'Trusted main revision is unavailable.');
     await git(repo, ['cat-file','-e',`${envelope.baseRevision}^{commit}`]);
-    await git(repo, ['merge-base','--is-ancestor',envelope.baseRevision,'HEAD']);
+    await git(repo, ['merge-base','--is-ancestor',envelope.baseRevision,trustedHead]);
   } catch { throw new SubmissionError('invalid-base', 'Base revision is unavailable or is not an ancestor of trusted main. Refresh the public clone.'); }
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'scripture-intake-')), index = path.join(tmp, 'index');
   try {
@@ -108,7 +157,7 @@ export async function preparePatch(repo, envelope) {
       check(total <= MAX_PATCH, 'oversized-content', 'Changed file content exceeds 2 MiB.');
       try { new TextDecoder('utf-8', {fatal:true}).decode(content); } catch { throw new SubmissionError('binary-file','Only UTF-8 text files are supported.'); }
       check(!content.includes(0), 'binary-file','Only UTF-8 text files are supported.');
-      check(!/-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----|\bgh[pousr]_[A-Za-z0-9]{20,}|\bgithub_pat_[A-Za-z0-9_]{20,}/.test(content.toString('utf8')), 'possible-credential','Remove possible private keys or access tokens before submitting.');
+      await checkCredentials(repo, [envelope.baseRevision,trustedHead], index, file, content);
       changes.push({path:file,mode,sha,content});
     }
     check(changes.length > 0, 'empty-patch', 'Patch has no file changes.');

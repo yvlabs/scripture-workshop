@@ -143,6 +143,63 @@ test('possible credentials in changed content are rejected before publication',a
   await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential');
 });
 
+const literalMarker = 'const syntheticMarker = "-----BEGIN ' + 'PRIVATE KEY-----";';
+async function credentialFixture(t, source = `${literalMarker}\nbefore\n`) {
+  const f = await fixture(t); await fs.writeFile(path.join(f.repo,'fixture.js'),source);
+  git(f.repo,['add','.']); git(f.repo,['commit','-m','Trusted credential-test literal']);
+  return {...f,base:git(f.repo,['rev-parse','HEAD']).trim(),patch(){return git(f.repo,['diff','--cached','--binary',this.base]);}};
+}
+test('unchanged trusted credential-test lines permit unrelated edits and preceding insertions',async t=>{
+  const f = await credentialFixture(t);
+  await fs.writeFile(path.join(f.repo,'fixture.js'),`new unrelated line\n${literalMarker}\nafter\n`);git(f.repo,['add','.']);
+  const beforeIndex = await fs.readFile(path.join(f.repo,'.git/index'));
+  const prepared = await preparePatch(f.repo,envelope(f.patch(),f.base));
+  assert.equal(prepared.changes.length,1);assert.deepEqual(await fs.readFile(path.join(f.repo,'.git/index')),beforeIndex);
+});
+test('unchanged token test literals are allowed but replacing a token is rejected',async t=>{
+  const oldToken = 'ghp_'+'x'.repeat(36), newToken = 'ghp_'+'y'.repeat(36), line = `const syntheticToken = "${oldToken}";`;
+  const f = await credentialFixture(t,`${line}\nbefore\n`);
+  await fs.writeFile(path.join(f.repo,'fixture.js'),`${line}\nafter\n`);git(f.repo,['add','.']);
+  assert.equal((await preparePatch(f.repo,envelope(f.patch(),f.base))).changes.length,1);
+  await fs.writeFile(path.join(f.repo,'fixture.js'),`const syntheticToken = "${newToken}";\nafter\n`);git(f.repo,['add','.']);
+  await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential');
+});
+test('copies or cross-file moves of trusted credential-test lines are rejected',async t=>{
+  for (const kind of ['new-file','same-file-copy','cross-file-move','same-file-move']) {
+    const prefix = Array.from({length:12},(_,i)=>`unchanged prefix ${i}`).join('\n');
+    const f = await credentialFixture(t,`${prefix}\n${literalMarker}\nbefore\n`);
+    if (kind === 'new-file') await fs.writeFile(path.join(f.repo,'new.js'),`${literalMarker}\n`);
+    if (kind === 'same-file-copy') await fs.appendFile(path.join(f.repo,'fixture.js'),`${literalMarker}\n`);
+    if (kind === 'cross-file-move') await fs.rename(path.join(f.repo,'fixture.js'),path.join(f.repo,'moved.js'));
+    if (kind === 'same-file-move') await fs.writeFile(path.join(f.repo,'fixture.js'),`${literalMarker}\n${prefix}\nbefore\n`);
+    git(f.repo,['add','.']);await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential',kind);
+  }
+});
+test('a credential match newly formed from existing fragments is rejected',async t=>{
+  for (const kind of ['private-key','token','joined-lines']) {
+    const tokenPrefix = 'ghp_', source = kind === 'private-key' ? 'const fixture = "-----BEGIN PRIV" + "ATE KEY-----";\n' : kind === 'token' ? `const fixture = "${tokenPrefix}" + "${'x'.repeat(36)}";\n` : `${tokenPrefix}\n${'x'.repeat(36)}\n`;
+    const candidate = kind === 'private-key' ? `${literalMarker}\n` : kind === 'token' ? `const fixture = "${tokenPrefix}${'x'.repeat(36)}";\n` : `${tokenPrefix}${'x'.repeat(36)}\n`;
+    const f = await credentialFixture(t,source);await fs.writeFile(path.join(f.repo,'fixture.js'),candidate);git(f.repo,['add','.']);
+    await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential',kind);
+  }
+});
+test('unchanged standalone private-key header cannot acquire newly introduced key body',async t=>{
+  const header = '-----BEGIN '+'PRIVATE KEY-----', footer = '-----END '+'PRIVATE KEY-----';
+  const f = await credentialFixture(t,`${header}\nsynthetic fixture\n`);
+  await fs.writeFile(path.join(f.repo,'fixture.js'),`${header}\nnew synthetic body\n${footer}\n`);git(f.repo,['add','.']);
+  await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential');
+});
+test('stale trusted ancestor cannot restore a credential-test line removed from current main',async t=>{
+  const f = await credentialFixture(t);await fs.writeFile(path.join(f.repo,'fixture.js'),'before\n');git(f.repo,['add','.']);git(f.repo,['commit','-m','Trusted removal of marker']);
+  await fs.writeFile(path.join(f.repo,'fixture.js'),`${literalMarker}\nafter\n`);git(f.repo,['add','.']);
+  await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential');
+});
+test('an unchanged marker must exist at the same path in current trusted main',async t=>{
+  const f = await credentialFixture(t);await fs.rename(path.join(f.repo,'fixture.js'),path.join(f.repo,'trusted-new-path.js'));git(f.repo,['add','.']);git(f.repo,['commit','-m','Trusted move of marker']);
+  git(f.repo,['read-tree',f.base]);await fs.writeFile(path.join(f.repo,'fixture.js'),`${literalMarker}\nafter\n`);git(f.repo,['add','fixture.js']);
+  await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential');
+});
+
 test('small patch to an existing blob larger than the envelope bound receives an oversized-file rejection',async t=>{
   const f=await fixture(t), tail='synthetic text\n'.repeat(350000), filename=path.join(f.repo,'large.txt');
   assert.ok(Buffer.byteLength(tail)>MAX_ENVELOPE);
