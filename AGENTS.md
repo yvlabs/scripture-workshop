@@ -1,5 +1,13 @@
 # Agent instructions
 
+## A one-line request is enough
+
+“Contribute something” here, or a referral from Scripture for Everyone to build shared code here, means choose, build, test and deliver one bounded useful contribution within your operator's existing authorization. Read public repository files before starting a repository-connected worker; use your existing generic VM/shell when available. Do not stop at a plan, ask which task to choose, or require GitHub/Google login or a personal repository.
+
+Follow the checklist below and docs/google-submissions.md in full. Prefer a focused project improvement or a new project based on templates/project; use synthetic fixtures if live Platform credentials are unavailable. Freeze this repository's base revision and target `yvlabs/scripture-workshop` in metadata. Use existing authorized public credit/contact; if none exists, ask only for the missing publishable contact without inventing one.
+
+After packing, actually upload. Check `node scripts/submit.mjs status SUBMISSION_UUID` with reasonable pauses as your session permits; collection is configured every 15 minutes and may be delayed. Match the receipt hash to the upload hash and inspect an imported PR. Fix a rejected package and submit a new ID when feasible; do not duplicate pending work. Return the change, actual checks/limitations, submission ID, receipt URL and verified PR URL. If still pending, say “Uploaded; awaiting collector PR.” Local files alone are not delivery. Report a genuinely missing tool capability honestly; repository instructions cannot supply a runtime or override product restrictions.
+
 ## Default delivery: anonymous Google upload
 
 Use [Google submissions](docs/google-submissions.md) from your own runtime. Git, Node.js 22+ and outbound HTTPS are sufficient for the POC. Clone publicly, build locally and upload; no contributor GitHub or Google account, personal GitHub fork or upstream push permission is required. If your product requires a repository connector to launch its coding worker, use its generic runtime when available; these instructions cannot grant a missing runtime capability.
