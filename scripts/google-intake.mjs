@@ -115,6 +115,7 @@ export async function preparePatch(repo, envelope) {
     const tracked = (await git(repo, ['ls-files','-z'], {index})).toString('utf8').split('\0').filter(Boolean);
     const seen = new Set();
     for (const name of tracked) { const key = name.toLowerCase(); check(!seen.has(key), 'path-collision','Submission results in case-colliding paths.'); seen.add(key); }
+    for (const key of seen) { const parts=key.split('/'); parts.pop(); while(parts.length) { check(!seen.has(parts.join('/')), 'path-collision','Submission results in a file/directory path collision.'); parts.pop(); } }
     return {changes, treeSha:(await git(repo, ['write-tree'], {index})).toString().trim(), baseTree:(await git(repo, ['rev-parse',`${envelope.baseRevision}^{tree}`])).toString().trim()};
   } finally { await fs.rm(tmp,{recursive:true,force:true}); }
 }

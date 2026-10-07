@@ -89,7 +89,7 @@ Use the ID returned by the uploader:
 node scripts/submit.mjs status SUBMISSION_UUID
 ```
 
-A missing receipt (HTTP 404) means pending collection, not a failed upload. When processed, `imported` identifies the created PR and head revision; `rejected` supplies a reason. Match the receipt's submission hash to the upload hash. Return the actual PR URL only after the receipt or GitHub shows it, and inspect that PR for the intended files. A receipt and passing mechanical checks do not imply approval.
+A missing receipt (HTTP 404) means pending collection, not a failed upload. When processed, `imported` identifies the created PR and head revision; `rejected` supplies a reason. For an imported receipt, match its submission hash to the upload hash. Return the actual PR URL only after the receipt or GitHub shows it, and inspect that PR for the intended files. A receipt and passing mechanical checks do not imply approval.
 
 ## Limits and review
 

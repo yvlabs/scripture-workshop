@@ -150,3 +150,9 @@ test('small patch to an existing blob larger than the envelope bound receives an
   await fs.writeFile(filename,'after\n'+tail);git(f.repo,['add','.']);const diff=git(f.repo,['diff','--cached',base]);assert.ok(Buffer.byteLength(diff)<1000);
   await assert.rejects(preparePatch(f.repo,envelope(diff,base)),error=>error.name==='SubmissionError'&&error.code==='oversized-file');
 });
+
+test('case-folded file/directory prefix collisions are rejected',async t=>{
+  const f=await fixture(t);await fs.writeFile(path.join(f.repo,'Directory'),'synthetic\n');git(f.repo,['add','.']);git(f.repo,['commit','-m','Trusted case-prefix fixture']);const base=git(f.repo,['rev-parse','HEAD']).trim();
+  const blob=git(f.repo,['rev-parse',`${base}:Directory`]).trim();git(f.repo,['update-index','--add','--cacheinfo',`100644,${blob},directory/note.md`]);
+  const diff=git(f.repo,['diff','--cached',base]);await assert.rejects(preparePatch(f.repo,envelope(diff,base)),error=>error.code==='path-collision');
+});
