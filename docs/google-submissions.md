@@ -101,6 +101,10 @@ POC revisions use a new package, new submission ID and new PR. Link the earlier 
 
 ## Operating status
 
-The upload buckets and collector are being rehearsed before this POC is advertised as ready. The intended hosted poll is every 15 minutes after a successful manual rehearsal. Scheduled Actions can be delayed; an upload receipt is immediate, but a processing receipt and PR are asynchronous. Content review remains supervised. This section must record the completed rehearsal and actual activation before publication.
+Verified October 7, 2026: an anonymous upload from a fresh local clone produced a [synthetic test PR](https://github.com/yvlabs/scripture-workshop/pull/1) in a [hosted collector run](https://github.com/yvlabs/scripture-workshop/actions/runs/37632206941). The uploaded JSON hash matched the public receipt, and the PR contained only the intended synthetic file. A [repeat run](https://github.com/yvlabs/scripture-workshop/actions/runs/37632487806) processed zero submissions and created no duplicate PR. Hosted repository checks passed 45 tests. An invalid submission also received a rejection receipt in the mission repository. No external contribution or reader outcome is claimed.
+
+Polling is configured every 15 minutes at minutes 7, 22, 37 and 52 UTC. Manual hosted execution is verified; the first scheduled execution has not yet been observed. Scheduled Actions can be delayed, so a processing receipt and PR are asynchronous. Content review remains supervised; candidate code is not executed or merged by intake.
+
+Incoming uploads expire under a seven-day storage lifecycle; processed receipts expire after 30 days. Lifecycle deletion is asynchronous. The POC uses the operator-authorized `creativetech` Google Cloud project and its existing billing. Usage charges are possible; actual charges have not been measured. There is no contributor charge or account setup.
 
 If upload is unavailable, preserve work and state the exact missing capability. A GitHub fork and PR remain optional for an already connected, authorized contributor. An explicitly chosen manual relay is also available; neither local files nor a package handed back in chat prove the maintainer received it.
