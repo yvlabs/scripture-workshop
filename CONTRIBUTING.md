@@ -1,22 +1,25 @@
 # Contributing
 
-Create/reuse the connected contributor's fork **before launching a repository-bound cloud agent**, then launch it on that fork. `yvlabs` is the upstream maintainer; read-only upstream access is normal. Never ask the operator to own `yvlabs`, grant it integration access or obtain collaborator permissions. Connect/select the contributor-owned fork when required. The contributing agent opens the upstream PR when its tools permit.
+## Contribute from your runtime
 
-## Verify GitHub access before building
+The default POC route is [anonymous Google submission](docs/google-submissions.md): public clone, bounded local changes, test, pack and upload. Git, Node.js 22+ and outbound HTTPS are sufficient. No contributor GitHub or Google account, personal GitHub repository or upstream push permission is needed. Our collector creates the review branch and PR.
 
-Follow [GitHub setup and submission](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/github-contribution.md): verify the authorized identity, create/reuse its fork, verify branch push access and confirm PR creation is supported. Resolve missing access with the operator before substantial implementation. An authenticated VM can do this through Git/CLI without a special repository connector.
+If you already have authorized GitHub contribution tools and permission to create a personal fork, the [fork-and-PR guide](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/github-contribution.md) is an optional route. `yvlabs` is the separate upstream maintainer. Never ask the operator to own it, install an integration there or obtain collaborator access.
 
-## Submit through your fork
+## Build and deliver one contribution
 
-1. Pick a task or discuss a small proposal in the [mission repository](https://github.com/yvlabs/scripture-for-everyone/issues). Check for existing work and active claims.
-2. Fork this repository. Copy `templates/project/` to `projects/<your-id>/` for a new project; replace metadata and synthetic content. Keep updates within one project.
-3. Include source, README, tests where meaningful, license and dependency notices. Document the Scripture/access path without keys or live payloads. Record tests actually run and outstanding limits.
-4. Run `npm test`, `npm run validate` and applicable project checks. Open a PR with evidence, risks, maintenance ownership and links to any directory task or effort. A proposed project's directory URL may be null until accepted; coordinate its record as part of review.
-5. Return the verified upstream PR URL with checks and limitations. Respond to the central maintainer in the PR. No automatic code merge is enabled. Changes to source invalidate prior review.
+1. Pick a task or small proposal in the [mission repository](https://github.com/yvlabs/scripture-for-everyone/issues). Check existing work and active claims. Without comment access, link the issue in the submission summary; do not claim you reserved the task.
+2. Clone this public repository and create a local branch from current main. Record its full 40-character main commit SHA. Copy `templates/project/` to `projects/<your-id>/` for a new project; replace metadata and synthetic content. Keep updates within one project.
+3. Include source, README, meaningful tests, license and dependency notices. Document the Scripture/access path without keys or live payloads. Record tests actually run and outstanding limits.
+4. Run `npm test`, `npm run validate` and applicable project checks. Include evidence, risks, maintenance ownership and links to any directory task or effort in the summary. A proposed project's directory URL may be null until accepted; coordinate its record as part of review.
+5. Follow [Google submissions](docs/google-submissions.md) to pack the diff and upload it. Return the successful upload result, ID and public receipt URL. The collector later records rejection or the created PR URL. Local files and successful packing alone do not count as submitted.
+6. Inspect the PR and respond to feedback when your tools permit. The first POC uses new submissions for revisions; link the prior PR in the new summary. No automatic code execution or merge is enabled. Changes to source require renewed review.
 
-## Manual relay only when explicitly chosen
+Root tooling/governance changes need a separate contribution and maintainer review. The POC excludes `.github/` changes. For binary or oversized work, discuss another delivery route rather than splitting work to bypass limits.
 
-If the operator explicitly chooses to relay files instead of connecting GitHub, follow [the portable package guide](docs/contribution-packages.md). Return a package file or JSON code block to your operator. They can email it to biblelabs.dev@gmail.com or relay it through an issue. A maintainer validates and stages it, inspects it, and opens an attributed PR. Never include secrets or private conversations. There is no unattended inbox ingestion or response-time guarantee.
+## Manual relay when needed
+
+If an agent cannot run Git or upload and its operator chooses to relay files, follow [the portable snapshot guide](docs/contribution-packages.md). Return a package file or JSON code block to that operator. They can email it to biblelabs.dev@gmail.com or relay it through an issue. A maintainer validates and stages it, inspects it, and opens an attributed PR. Never include secrets or private conversations. Email has no unattended ingestion or response-time guarantee.
 
 ## Rights and credit
 

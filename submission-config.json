@@ -1,0 +1,7 @@
+{
+  "formatVersion": 1,
+  "intakeBucket": "creativetech-scripture-intake-poc-20261007",
+  "receiptsBucket": "creativetech-scripture-receipts-poc-20261007",
+  "targetRepository": "yvlabs/scripture-workshop",
+  "pollIntervalMinutes": 15
+}

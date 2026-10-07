@@ -1,6 +1,6 @@
 # Portable contribution packages, version 1
 
-The default workflow now requires GitHub fork-and-PR access checked before building. This guide remains available when the operator explicitly chooses manual relay. A generated package is not proof that the contribution reached the maintainer.
+The default runtime workflow uses [anonymous Google submission](google-submissions.md) of a git diff against the public repository. This guide describes a different format: a complete project snapshot for an explicitly chosen manual relay. Do not send this snapshot JSON to the diff uploader. A generated package is not proof that the contribution reached the maintainer.
 
 A package is one UTF-8 JSON file containing one complete project snapshot. It can be produced by any agent, attached as a file, or returned as a JSON code block for an operator to save. No GitHub account, repository integration or command runner is required to produce it. A shared repository does not give an agent network or GitHub permissions.
 

@@ -1,29 +1,20 @@
 # Scripture Workshop
 
-## Fork first: yvlabs is the upstream maintainer
-
-Treat `yvlabs` as a separate maintainer account. Your operator does not need to own it. Read-only access to the public upstream is expected and sufficient for the fork-and-PR workflow.
-
-**Create or reuse a fork in the connected contributor's account before launching a repository-bound coding/cloud agent. Launch that agent on the contributor's fork, not on `yvlabs/...`.** If the integration requires repository selection or installation access, select/authorize the contributor-owned fork through the operator's supported flow.
-
-Do not ask whether the operator owns `yvlabs`, suggest signing in as `yvlabs`, request collaborator/admin access, or propose installing/granting your coding integration access to `yvlabs`. An upstream write-access failure means you should use the fork workflow; it is not a reason to expand upstream permissions.
-
-For example, if the connected account is `alice`, work in `alice/scripture-for-everyone` and submit from `alice:contribution/short-description` to `yvlabs/scripture-for-everyone:main`. For workshop code, use the equivalent `alice/scripture-workshop` fork. Replace `alice` with the verified connected identity; never assume the upstream owner is your contributor identity.
-
-Handle fork creation and PR submission yourself when your authorized tools support them. Ask the operator only for a specific missing connection, fork permission or human-only approval. Do not present “grant access to yvlabs” as an option, and do not automatically delegate opening the PR to the operator.
-
-
 A shared home for prototypes, reusable examples and tools serving the [Scripture for Everyone mission](https://github.com/yvlabs/scripture-for-everyone): help people in every demographic and circumstance access Bible text.
 
 The mission repository catalogs efforts, needs and tasks. **This repository holds code** in `projects/<project-id>/`. No agent vendor, shared model account or token donation is required. An empty projects directory means no contributed projects have been accepted yet.
 
-## Connect GitHub, then contribute
+## Contribute without a GitHub connection
 
-The default workflow is **fork → build and test → push → pull request**. First follow [GitHub setup and submission](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/github-contribution.md). Verify an authorized account can create/reuse a fork, push a contribution branch and open an upstream PR. The agent can handle the fork and work in its VM; the operator does not need to manually create a blank repo. No write access to this central repository is needed.
+> Read https://github.com/yvlabs/scripture-workshop and its AGENTS.md. Pick one useful, bounded contribution to the Scripture for Everyone mission. Clone the public repository in your runtime, build and test, then follow docs/google-submissions.md to upload your changes. Return the upload result, submission ID and receipt URL; return the PR URL when it is available. Use synthetic fixtures without an App Key.
 
-If access is missing, ask the operator to connect GitHub before substantial implementation. A public clone or read-only connector does not provide submission access. Return the actual upstream PR URL when finished, with checks and limitations.
+The default POC route is **public clone → build and test → upload → central PR**. [Google submissions](docs/google-submissions.md) needs Git, Node.js 22+ and outbound HTTPS. It requires no contributor GitHub or Google account, no personal GitHub repository, and no permission to push to `yvlabs`. Our collector creates a branch and PR from the uploaded changes. Receipt is distinct from review or acceptance; submitted code is not automatically executed or merged.
 
-Start with [CONTRIBUTING.md](CONTRIBUTING.md), [AGENTS.md](AGENTS.md), and the [project template](templates/project/). If the operator explicitly chooses manual relay, use the [package format](docs/contribution-packages.md) or an appropriate patch. Packages can be relayed to biblelabs.dev@gmail.com or through an issue/PR by the operator. This fallback requires a handoff; receipt and review remain supervised.
+Start with [CONTRIBUTING.md](CONTRIBUTING.md), [AGENTS.md](AGENTS.md), and the [project template](templates/project/). Keep a contribution within one project. Read existing mission issues and claims; posting a claim is optional when you cannot comment.
+
+`yvlabs` is a separate upstream maintainer. Do not ask the operator to own it, install a coding integration there or obtain collaborator access. If your tools already support GitHub contribution and your operator authorizes a personal fork, use the optional [fork-and-PR guide](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/github-contribution.md).
+
+The [portable snapshot format](docs/contribution-packages.md) remains available for an explicitly chosen manual relay, especially if an agent cannot run Git or upload. Local files are not a submission until a delivery route actually receives them.
 
 ## Run the tools
 
