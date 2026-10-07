@@ -142,3 +142,11 @@ test('possible credentials in changed content are rejected before publication',a
   const f=await fixture(t);await fs.writeFile(path.join(f.repo,'credential.txt'),'-----BEGIN PRIVATE KEY-----\nsynthetic\n');git(f.repo,['add','.']);
   await assert.rejects(preparePatch(f.repo,envelope(f.patch(),f.base)),e=>e.code==='possible-credential');
 });
+
+test('small patch to an existing blob larger than the envelope bound receives an oversized-file rejection',async t=>{
+  const f=await fixture(t), tail='synthetic text\n'.repeat(350000), filename=path.join(f.repo,'large.txt');
+  assert.ok(Buffer.byteLength(tail)>MAX_ENVELOPE);
+  await fs.writeFile(filename,'before\n'+tail);git(f.repo,['add','.']);git(f.repo,['commit','-m','Trusted existing large text fixture']);const base=git(f.repo,['rev-parse','HEAD']).trim();
+  await fs.writeFile(filename,'after\n'+tail);git(f.repo,['add','.']);const diff=git(f.repo,['diff','--cached',base]);assert.ok(Buffer.byteLength(diff)<1000);
+  await assert.rejects(preparePatch(f.repo,envelope(diff,base)),error=>error.name==='SubmissionError'&&error.code==='oversized-file');
+});

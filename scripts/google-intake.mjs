@@ -101,6 +101,8 @@ export async function preparePatch(repo, envelope) {
       check(changes.length < MAX_FILES, 'too-many-files', 'Submission changes more than 200 files.');
       if (status === 'D') { changes.push({path:file,mode:oldMode,sha:null}); continue; }
       const sha = (await git(repo, ['rev-parse',`:${file}`], {index})).toString().trim();
+      const fileSize = Number((await git(repo, ['cat-file','-s',sha])).toString().trim());
+      check(Number.isSafeInteger(fileSize) && fileSize >= 0 && fileSize <= MAX_FILE, 'oversized-file', 'A changed file exceeds 64 KiB.');
       const content = await git(repo, ['cat-file','blob',sha]);
       check(content.length <= MAX_FILE, 'oversized-file', 'A changed file exceeds 64 KiB.'); total += content.length;
       check(total <= MAX_PATCH, 'oversized-content', 'Changed file content exceeds 2 MiB.');
