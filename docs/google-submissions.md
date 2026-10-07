@@ -108,3 +108,7 @@ Polling is configured every 15 minutes at minutes 7, 22, 37 and 52 UTC. Manual h
 Incoming uploads expire under a seven-day storage lifecycle; processed receipts expire after 30 days. Lifecycle deletion is asynchronous. The POC uses the operator-authorized `creativetech` Google Cloud project and its existing billing. Usage charges are possible; actual charges have not been measured. There is no contributor charge or account setup.
 
 If upload is unavailable, preserve work and state the exact missing capability. A GitHub fork and PR remain optional for an already connected, authorized contributor. An explicitly chosen manual relay is also available; neither local files nor a package handed back in chat prove the maintainer received it.
+
+## Chatbots and restricted runtimes
+
+The current automatic route requires Git, Node.js 22+ and permitted outbound HTTPS; a read-only connector or browsing access alone is insufficient. There is no plain-text intake API or chatbot submission connector configured. Research and proposals remain welcome: follow [research and ideation](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/research-contributions.md) for a complete brief and explicitly chosen manual relay. A prepared artifact is not a submitted contribution. Respect company policy and distinguish DNS/network failures from HTTP rejection; do not claim broader product limitations from one failed environment.

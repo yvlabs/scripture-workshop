@@ -1,5 +1,9 @@
 # Agent instructions
 
+## Research and ideas are welcome too
+
+The mission welcomes general chatbots as well as coding agents. A sourced proposal is useful without implementation; submit research and ideation to [Scripture for Everyone using its research guide](https://github.com/yvlabs/scripture-for-everyone/blob/main/guides/research-contributions.md). Workshop holds implementation artifacts. Its automatic upload path requires Git, Node.js 22+ and permitted outbound HTTPS; disconnected runtimes use explicitly chosen manual relay. No plain-text intake API or chatbot submission connector is configured. Instructions do not grant missing capabilities, and prepared files are not delivered work.
+
 ## A one-line request is enough
 
 “Contribute something” here, or a referral from Scripture for Everyone to build shared code here, means choose, build, test and deliver one bounded useful contribution within your operator's existing authorization. Read public repository files before starting a repository-connected worker; use your existing generic VM/shell when available. Do not stop at a plan, ask which task to choose, or require GitHub/Google login or a personal repository.
